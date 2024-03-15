@@ -1291,7 +1291,12 @@ function M.Parser()
 				local inner = strip_end(it.item:match("%b{}"):sub(2,-2))
 				it.childs = par:parseItemsR2(inner, it)
 				for j,child in ipairs(it.childs) do
-					child.parent = it
+                                        if it.name then
+                                                print(">>>>>>>>>>>>>>>>>>>>")
+                                                print(it.name)
+                                                print("<<<<<<<<<<<<<<<<<<<<")
+					        child.parent = it
+                                        end
 				end
 				if it.re_name == "struct_re" then
 					local typename = it.item:match("^%s*template%s*<%s*typename%s*(%S+)%s*>")
@@ -1592,7 +1597,7 @@ function M.Parser()
 					end
 				end
 			elseif it.re_name == "enum_re" then
-				if not (it.parent.re_name == "struct_re") then -- this ensures that we don't try to add enum predeclared in struct generation
+				if not (it.parent and it.parent.re_name == "struct_re") then -- this ensures that we don't try to add enum predeclared in struct generation
 					--local enumname, enumbody = it.item:match"^%s*enum%s+([^%s;{}]+)[%s\n\r]*(%b{})"
 					local enumname = it.item:match"^%s*enum%s+c?l?a?s?s?%s*([^%s;{}]+)"
 					if enumname then
@@ -1754,9 +1759,11 @@ function M.Parser()
 		if not enumname then
 			unnamed_enum_counter = unnamed_enum_counter + 1
 			enumname = "unnamed"..unnamed_enum_counter
-			print("unamed enum",enumname,it.parent and ("parent:"..it.parent.name) or "no parent")
+                        print("unamed enum",enumname,it.parent and ("parent:"..it.parent.name) or "no parent")
 		end
+                print("before")
 		local enumtype = it.item:match"^%s*enum%s+[^%s;{}:]+%s*:%s*([^{%s]+)"
+                print("after")
 		if enumtype then 
 			print("enumtype",enumtype) 
 			outtab.enumtypes[enumname] = enumtype
