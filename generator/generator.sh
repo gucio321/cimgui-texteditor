@@ -13,4 +13,4 @@
 # arg[1] compiler name gcc, clang, or cl
 # arg[2] options as words in one string: internal for imgui_internal generation
 # examples: "" "internal"
-luajit ./generator.lua gcc "internal"
+luajit ./generator.lua g++ "internal"
